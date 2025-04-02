@@ -1,3 +1,4 @@
+using Cifcisinden.Business.Operations.User;
 using Cifcisinden.Data.Context;
 using Cifcisinden.Data.Repositories;
 using Cifcisinden.Data.UnitOfWork;
@@ -21,6 +22,8 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 //Generic olduðu için typeof kullanýldý.
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<IUserService, UserManager>();
 
 
 

@@ -28,7 +28,7 @@ public class UserEntity : BaseEntity
 
     public string Adress { get; set; }
 
-    public string? PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; }
 
     public UserType UserType { get; set; }
 

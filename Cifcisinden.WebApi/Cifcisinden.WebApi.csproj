@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Cifcisinden.Business\Cifcisinden.Business.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
