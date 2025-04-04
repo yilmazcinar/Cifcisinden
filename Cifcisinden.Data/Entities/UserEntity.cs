@@ -46,14 +46,14 @@ public class UserConfiguration : BaseConfiguration<UserEntity>
     {
         base.Configure(builder);
         builder.Property(x => x.Email).IsRequired().HasMaxLength(100);
-        builder.Property(x => x.Password).IsRequired().HasMaxLength(100);
+        builder.Property(x => x.Password).IsRequired().HasMaxLength(1000);
         builder.Property(x => x.FirstName).IsRequired().HasMaxLength(50);
         builder.Property(x => x.LastName).IsRequired().HasMaxLength(50);
         builder.Property(x => x.BirthDay).IsRequired();
         builder.Property(x => x.City).IsRequired();
         builder.Property(x => x.Town).IsRequired();
         builder.Property(x => x.Adress).IsRequired().HasMaxLength(200);
-        builder.Property(x => x.PhoneNumber).IsRequired(false).HasMaxLength(20);
+        builder.Property(x => x.PhoneNumber).IsRequired(false).HasMaxLength(1000);
         
         builder.Property(x => x.UserStatus).IsRequired();
     }

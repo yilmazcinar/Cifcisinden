@@ -28,7 +28,7 @@ public class RegisterRequest
     [Required]
     public Town Town { get; set; }
 
-    public string? Adress { get; set; }
+    public string Adress { get; set; }
     
     [Required]
     public DateTime BirthDay { get; set; }

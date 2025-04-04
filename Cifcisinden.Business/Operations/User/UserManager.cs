@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Core;
+using Cifcisinden.Business.DataProtection;
 using Cifcisinden.Business.Operations.User.Dtos;
 using Cifcisinden.Business.Types;
 using Cifcisinden.Data.Entities;
@@ -14,17 +15,16 @@ namespace Cifcisinden.Business.Operations.User;
 
 public class UserManager : IUserService
 {
-
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<UserEntity> _userRepository;
+    private readonly IDataProtection _protector;
 
-    public UserManager(IUnitOfWork unitOfWork, IRepository<UserEntity> userRepository)
+    public UserManager(IUnitOfWork unitOfWork, IRepository<UserEntity> userRepository, IDataProtection protector)
     {
-
+        _protector = protector;
         _unitOfWork = unitOfWork;
         _userRepository = userRepository;
     }
-
 
     public async Task<ServiceMassage> AddUser(AddUserDto addUserDto)
     {
@@ -42,15 +42,16 @@ public class UserManager : IUserService
         var user = new UserEntity
         {
             Email = addUserDto.Email,
-            Password = addUserDto.Password,
+            Password = _protector.Protect(addUserDto.Password),
             FirstName = addUserDto.FirstName,
             LastName = addUserDto.LastName,
             UserStatus = addUserDto.UserStatus,
             City = addUserDto.City,
             Town = addUserDto.Town,
-            Adress = addUserDto.Adress,
+            Adress = addUserDto.Adress ?? string.Empty,
             BirthDay = addUserDto.BirthDay,
-            PhoneNumber = addUserDto.PhoneNumber
+            PhoneNumber = _protector.Protect(addUserDto.PhoneNumber),
+            UserType = Data.Enums.UserType.Customer,
         };
 
         _userRepository.Add(user);
@@ -59,10 +60,9 @@ public class UserManager : IUserService
         {
             await _unitOfWork.SaveChangesAsync();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-
-            throw new Exception("Kullanıcı kaydı sırasında hata oluştu");
+            throw new Exception($" {ex.ToString()} + Kullanıcı kaydı sırasında hata oluştu ");
         }
 
         return new ServiceMassage
@@ -70,5 +70,46 @@ public class UserManager : IUserService
             IsSucceed = true,
             Message = "Kullanıcı başarıyla kaydedildi"
         };
+    }
+
+    public ServiceMassage<UserInfoDto> LoginUser(LoginUserDto user)
+    {
+        var userEntity = _userRepository.Get(x => x.Email.ToLower() == user.Email.ToLower());
+
+        if (userEntity == null)
+        {
+            return new ServiceMassage<UserInfoDto>
+            {
+                IsSucceed = false,
+                Message = "Kullanıcı adı veya şifre hatalı"
+            };
+        }
+
+        var unprotectedPassword = _protector.UnProtect(userEntity.Password);
+
+        if (user.Password != unprotectedPassword)
+        {
+            return new ServiceMassage<UserInfoDto>
+            {
+                IsSucceed = false,
+                Message = "Kullanıcı adı veya şifre hatalı"
+            };
+        }
+        else
+        {
+            return new ServiceMassage<UserInfoDto>
+            { 
+                IsSucceed = true,
+                Data = new UserInfoDto 
+                {
+                    Email = userEntity.Email,
+                    FirstName = userEntity.FirstName,
+                    LastName = userEntity.LastName,
+                    UserType = userEntity.UserType,
+                }
+
+            };  
+        }
+
     }
 }

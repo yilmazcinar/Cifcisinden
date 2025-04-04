@@ -15,6 +15,8 @@ public interface IUserService
     
     //Asyn çünkü UnitOfWork ile işlem yapılacak
 
+    ServiceMassage<UserInfoDto> LoginUser(LoginUserDto user);
+
 
 
 }

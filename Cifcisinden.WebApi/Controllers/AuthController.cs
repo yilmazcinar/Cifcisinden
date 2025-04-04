@@ -1,6 +1,8 @@
 ﻿using Cifcisinden.Business.Operations.User;
 using Cifcisinden.Business.Operations.User.Dtos;
+using Cifcisinden.WebApi.Jwt;
 using Cifcisinden.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +12,6 @@ namespace Cifcisinden.WebApi.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-
     private readonly IUserService _userService;
 
     public AuthController(IUserService userService)
@@ -18,7 +19,7 @@ public class AuthController : ControllerBase
         _userService = userService;
     }
 
-    [HttpPost]
+    [HttpPost("register")]
 
     public async Task<IActionResult> Register(RegisterRequest request) 
     {
@@ -39,6 +40,7 @@ public class AuthController : ControllerBase
             Adress = request.Adress,
             BirthDay = request.BirthDay,
             PhoneNumber = request.PhoneNumber
+
         };
 
         var result = await _userService.AddUser(addUserDto);
@@ -51,11 +53,55 @@ public class AuthController : ControllerBase
         {
             return BadRequest(result.Message);
         }
-
-
-
     }
 
-    
+    [HttpPost("login")]
+
+    public IActionResult Login(LoginRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+
+        var result = _userService.LoginUser(new LoginUserDto { Email = request.Email, Password = request.Password });
+
+        if (!result.IsSucceed)
+        {
+            return BadRequest(result.Message);
+        }
+
+        var user = result.Data;
+
+        var configuration = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+
+        var token = JwtHelper.GenerateJwtToken(new JwtDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            SecretKey = configuration["Jwt:SecretKey"]!,
+            Issuer = configuration["Jwt:Issuer"]!,
+            Audience = configuration["Jwt:Audience"]!,
+            ExpireMinutes = int.Parse(configuration["Jwt:ExpireMinutes"]!)
+
+        });
+
+        return Ok(new LoginResponse
+        {
+            Message = "Login successful",
+            Token = token,
+        });
+    }
+
+    [HttpGet("user-info")]
+    [Authorize] // Kullanıcı bilgilerini almak için yetkilendirme gerektirir
+    public IActionResult GetUserInfo()
+    {
+        
+        return Ok();
+    }
 
 }
