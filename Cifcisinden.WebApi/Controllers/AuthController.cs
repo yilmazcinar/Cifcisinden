@@ -19,6 +19,19 @@ public class AuthController : ControllerBase
         _userService = userService;
     }
 
+    [HttpGet("All-Users")]
+
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var result = await _userService.GetAllUsers();
+        if (result == null)
+        {
+            return NotFound();
+        }
+        return Ok(result);
+    }
+
+
     [HttpPost("register")]
 
     public async Task<IActionResult> Register(RegisterRequest request) 

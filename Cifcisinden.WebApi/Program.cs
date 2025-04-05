@@ -1,6 +1,8 @@
 using System.Text;
 using Cifcisinden.Business.DataProtection;
+using Cifcisinden.Business.Operations.Advert;
 using Cifcisinden.Business.Operations.User;
+using Cifcisinden.Business.Operations.UserFavoriteAdvert;
 using Cifcisinden.Data.Context;
 using Cifcisinden.Data.Repositories;
 using Cifcisinden.Data.UnitOfWork;
@@ -79,6 +81,10 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<IUserService, UserManager>();
+
+builder.Services.AddScoped<IUserFavoriteAdvertService, UserFavoriteAdvertManager>();
+
+builder.Services.AddScoped<IAdvertService, AdvertManager>();
 
 var app = builder.Build();
 

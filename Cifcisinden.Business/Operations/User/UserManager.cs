@@ -72,6 +72,21 @@ public class UserManager : IUserService
         };
     }
 
+    public async Task<List<UserInfoDto>> GetAllUsers()
+    {
+        var users = _userRepository.GetAll()
+            .Select(x => new UserInfoDto
+            {
+                Id = x.Id,
+                Email = x.Email,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                UserType = x.UserType,
+            }).ToList();
+
+        return await Task.FromResult(users);
+    }
+
     public ServiceMassage<UserInfoDto> LoginUser(LoginUserDto user)
     {
         var userEntity = _userRepository.Get(x => x.Email.ToLower() == user.Email.ToLower());
@@ -112,4 +127,6 @@ public class UserManager : IUserService
         }
 
     }
+
+    
 }

@@ -17,6 +17,6 @@ public interface IUserService
 
     ServiceMassage<UserInfoDto> LoginUser(LoginUserDto user);
 
-
+    Task<List<UserInfoDto>> GetAllUsers();
 
 }
