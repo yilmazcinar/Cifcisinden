@@ -12,10 +12,17 @@ namespace Cifcisinden.Business.Operations.Advert
     {
 
         Task<ServiceMassage> AddAdvert(AddAdvertDto advert);
+
         Task<AdvertDto> GetAdvert(int id);
-        Task<List<AdvertDto>> GetAllAdverts(); 
 
+        Task<List<AdvertDto>> GetAllAdverts();
 
+        Task<ServiceMassage> UpdateAdvert(int id, 
+UpdateAdvertDto updateAdvertDto);
+
+        Task<ServiceMassage> DeleteAdvert(int id);
+
+        Task<ServiceMassage> PutAdvert(int id, PutAdvertDto putAdvertDto);
 
     }
 }

@@ -70,6 +70,35 @@ public class AdvertManager : IAdvertService
         };
     }
 
+    public Task<ServiceMassage> DeleteAdvert(int id)
+    {
+
+        var advert = _advertRepository.GetAll().FirstOrDefault(x => x.Id == id);
+        if (advert == null)
+        {
+            return Task.FromResult(new ServiceMassage
+            {
+                IsSucceed = false,
+                Message = "İlan bulunamadı."
+            });
+        }
+        _advertRepository.Delete(advert);
+        try
+        {
+            _unitOfWork.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($" {ex} İlan silinirken bir hata oluştu.");
+        }
+        return Task.FromResult(new ServiceMassage
+        {
+            IsSucceed = true,
+            Message = "İlan başarıyla silindi."
+        });
+
+    }
+
     public Task<AdvertDto> GetAdvert(int id)
     {
         var advert = _advertRepository.GetAll(x => x.Id == id).Select(x => new AdvertDto
@@ -104,5 +133,75 @@ public class AdvertManager : IAdvertService
         }).ToListAsync();
 
         return adverts;
+    }
+
+    public async Task<ServiceMassage> PutAdvert(int id, PutAdvertDto putAdvertDto)
+    {
+
+        var advert = _advertRepository.GetAll().FirstOrDefault(x => x.Id == id);
+        if (advert == null)
+        {
+            return await Task.FromResult(new ServiceMassage
+            {
+                IsSucceed = false,
+                Message = "İlan bulunamadı."
+            });
+        }
+        
+        advert.Title = putAdvertDto.Title;
+        advert.Description = putAdvertDto.Description;
+        advert.ServiceCategory = putAdvertDto.ServiceCategory;
+        advert.Crop = putAdvertDto.Crop;
+        advert.City = putAdvertDto.City;
+        advert.Town = putAdvertDto.Town;
+        advert.Adress = putAdvertDto.Adress;
+        advert.PhoneNumber = putAdvertDto.PhoneNumber;
+
+
+        _advertRepository.Update(advert);
+        try
+        {
+            _unitOfWork.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            await _unitOfWork.RollbackTransaction();
+            throw new Exception($" {ex} İlan güncellenirken bir hata oluştu.");
+        }
+        return await Task.FromResult(new ServiceMassage
+        {
+            IsSucceed = true,
+            Message = "İlan başarıyla güncellendi."
+        });
+    }
+
+    public Task<ServiceMassage> UpdateAdvert(int id, UpdateAdvertDto updateAdvertDto)
+    {
+
+        var advert = _advertRepository.GetAll().FirstOrDefault(x => x.Id == id);
+        if (advert == null)
+        {
+            return Task.FromResult(new ServiceMassage
+            {
+                IsSucceed = false,
+                Message = "İlan bulunamadı."
+            });
+        }
+        advert.Description = updateAdvertDto.Description;
+        _advertRepository.Update(advert);
+        try
+        {
+            _unitOfWork.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($" {ex} İlan güncellenirken bir hata oluştu.");
+        }
+        return Task.FromResult(new ServiceMassage
+        {
+            IsSucceed = true,
+            Message = "İlan başarıyla güncellendi."
+        });
+
     }
 }

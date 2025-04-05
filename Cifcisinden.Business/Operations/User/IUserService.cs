@@ -19,4 +19,6 @@ public interface IUserService
 
     Task<List<UserInfoDto>> GetAllUsers();
 
+    Task<ServiceMassage> DeleteUser(int id);
+
 }

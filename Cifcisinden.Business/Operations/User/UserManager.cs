@@ -72,6 +72,34 @@ public class UserManager : IUserService
         };
     }
 
+    public async Task<ServiceMassage> DeleteUser(int id)
+    {
+
+        var user = _userRepository.Get(x => x.Id == id);
+        if (user == null)
+        {
+            return await Task.FromResult(new ServiceMassage
+            {
+                IsSucceed = false,
+                Message = "Kullanıcı bulunamadı"
+            });
+        }
+        _userRepository.Delete(user);
+        try
+        {
+            _unitOfWork.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($" {ex.ToString()} + Kullanıcı silinirken hata oluştu ");
+        }
+        return await Task.FromResult(new ServiceMassage
+        {
+            IsSucceed = true,
+            Message = "Kullanıcı başarıyla silindi"
+        });
+    }
+
     public async Task<List<UserInfoDto>> GetAllUsers()
     {
         var users = _userRepository.GetAll()

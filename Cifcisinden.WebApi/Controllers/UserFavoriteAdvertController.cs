@@ -1,4 +1,5 @@
 ﻿using Cifcisinden.Business.Operations.UserFavoriteAdvert;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ public class UserFavoriteAdvertController : ControllerBase
     }
 
     [HttpPost("add")]
+    [Authorize]
     public async Task<IActionResult> AddToFavorites(int userId, int advertId)
     {
   
@@ -24,6 +26,7 @@ public class UserFavoriteAdvertController : ControllerBase
     }
 
     [HttpDelete("remove")]
+    [Authorize]
     public async Task<IActionResult> RemoveFromFavorites(int userId, int advertId)
     {
         await _service.RemoveFromFavorites(userId, advertId);
@@ -31,6 +34,7 @@ public class UserFavoriteAdvertController : ControllerBase
     }
 
     [HttpGet("user/{userId}")]
+    [Authorize]
     public async Task<IActionResult> GetUserFavorites(int userId)
     {
         var favorites = await _service.GetUserFavorites(userId);

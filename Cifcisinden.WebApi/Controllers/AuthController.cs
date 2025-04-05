@@ -20,6 +20,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("All-Users")]
+    [Authorize(Roles = "Admin")]
 
     public async Task<IActionResult> GetAllUsers()
     {
@@ -110,11 +111,27 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("user-info")]
-    [Authorize] // Kullanıcı bilgilerini almak için yetkilendirme gerektirir
+    [Authorize(Roles = "Admin")] // Kullanıcı bilgilerini almak için yetkilendirme gerektirir
     public IActionResult GetUserInfo()
     {
         
         return Ok();
     }
+
+    [HttpDelete("delete/{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var result = await _userService.DeleteUser(id);
+        if (result.IsSucceed)
+        {
+            return Ok(result.Message);
+        }
+        else
+        {
+            return BadRequest(result.Message);
+        }
+    }
+
 
 }
