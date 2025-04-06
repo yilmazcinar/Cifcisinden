@@ -99,6 +99,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionMiddleware();
+
 app.UseMaintenenceMode();
 
 app.UseHttpsRedirection();
