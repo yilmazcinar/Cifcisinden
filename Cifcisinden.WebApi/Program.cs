@@ -1,11 +1,13 @@
 using System.Text;
 using Cifcisinden.Business.DataProtection;
 using Cifcisinden.Business.Operations.Advert;
+using Cifcisinden.Business.Operations.Setting;
 using Cifcisinden.Business.Operations.User;
 using Cifcisinden.Business.Operations.UserFavoriteAdvert;
 using Cifcisinden.Data.Context;
 using Cifcisinden.Data.Repositories;
 using Cifcisinden.Data.UnitOfWork;
+using Cifcisinden.WebApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -86,6 +88,8 @@ builder.Services.AddScoped<IUserFavoriteAdvertService, UserFavoriteAdvertManager
 
 builder.Services.AddScoped<IAdvertService, AdvertManager>();
 
+builder.Services.AddScoped<ISettingService, SettingManager>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -94,6 +98,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMaintenenceMode();
 
 app.UseHttpsRedirection();
 

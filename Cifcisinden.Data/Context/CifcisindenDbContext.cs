@@ -23,14 +23,21 @@ public class CifcisindenDbContext : DbContext
 
     public DbSet<UserFavoriteAdvertEntity> UserFavoriteAdverts => Set<UserFavoriteAdvertEntity>();
 
+    public DbSet<SettingEntity> Settings { get; set; }
 
-   
 
 
-protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<SettingEntity>().HasData(new SettingEntity
+        {
+            Id = 1,
+            MaintenenceMode = false
+        });
         modelBuilder.ApplyConfiguration(new AdvertConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new UserFavoriteAdvertConfiguration());
