@@ -44,7 +44,7 @@ The UnitOfWork pattern is used to manage database transactions. It ensures that 
 The project supports basic Create, Read, Update, and Delete (CRUD) operations for managing data entities.
 
 ### 🚀 Asynchronous Programming
-Asynchronous programming is used to improve application performance and responsiveness by allowing non-blocking operations.
+This project is coded using asynchronous programming to improve application performance and responsiveness.
 
 ### 🌾 Advertisement Management
 The application provides functionality for farmers to create and manage advertisements for renting agricultural tools. This includes:
@@ -52,6 +52,9 @@ The application provides functionality for farmers to create and manage advertis
 - Updating existing rental advertisements.
 - Deleting rental advertisements.
 - Retrieving single or multiple rental advertisements.
+
+### 🧩 OOP and SOLID Principles
+This project is coded using Object-Oriented Programming (OOP) and adheres to SOLID principles to ensure maintainability, scalability, and testability.
 
 ## 🛠️ Installation
 To install and set up the project, follow these steps:
