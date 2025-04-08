@@ -19,7 +19,7 @@ namespace Cifcisinden.WebApi.Middlewares
 
             bool isMaintenenceMod = settingService.GetMaintenenceMode();
             
-            if(context.Request.Path.StartsWithSegments("api/auth/login") || context.Request.Path.StartsWithSegments("api/setting"))
+            if(context.Request.Path.StartsWithSegments("/api/auth/login") || context.Request.Path.StartsWithSegments("/api/setting"))
             {
                 await _next(context);
                 return;
